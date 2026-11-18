@@ -33,7 +33,7 @@ jobs:
           fetch-depth: 0
 
       - name: Scan for committed secrets
-        run: docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest git /repo --redact --verbose
+        run: docker run --rm -v "$PWD:/repo" -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0=/repo zricethezav/gitleaks:latest git /repo --redact --verbose
 
   scan_js:
     runs-on: ubuntu-latest
