@@ -1,0 +1,47 @@
+<% content_for :title, "Pick a handle" %>
+<section class="onboarding">
+  <div class="container onboarding__inner">
+    <h1 class="display display--lg center">Pick a handle</h1>
+    <p class="center muted">Pick a handle. The rest is easy.</p>
+    <%= form_for(@user, url: profile_setup_path, method: :patch, html: { class: "form form--narrow", novalidate: true }) do |f| %>
+      <%= error_summary(@user) %>
+      <div class="field">
+        <%= f.label :handle, "Handle", class: "field__label" %>
+        <p class="field__hint" id="handle_hint">3–20 letters, numbers or underscores. This is how others see you.</p>
+        <div class="field__prefix"><span aria-hidden="true">@</span>
+          <%= f.text_field :handle, autofocus: true, autocomplete: "username", spellcheck: false, required: true, maxlength: 20, class: "field__input", aria: field_aria(@user, :user, :handle, hint_id: "handle_hint") %>
+        </div>
+        <%= field_error(@user, :user, :handle) %>
+      </div>
+
+      <% if current_user.birth_year.blank? %>
+        <div class="field">
+          <%= f.label :birth_year, "Year of birth", class: "field__label" %>
+          <p class="field__hint" id="birth_year_hint">TKT accounts are for people aged <%= User::MINIMUM_AGE %> and over.</p>
+          <%= f.number_field :birth_year, inputmode: "numeric", min: 1900, max: Date.current.year, required: true, class: "field__input field__input--short", aria: field_aria(@user, :user, :birth_year, hint_id: "birth_year_hint") %>
+          <%= field_error(@user, :user, :birth_year) %>
+        </div>
+      <% end %>
+
+      <% if current_user.birth_year.blank? || current_user.terms_accepted_at.blank? || current_user.sensitive_data_consent_at.blank? %>
+        <fieldset class="checks">
+          <legend class="visually-hidden">Agreements</legend>
+          <% if current_user.birth_year.blank? %>
+            <label class="check"><%= f.check_box :confirm_minimum_age %> <span>I am <%= User::MINIMUM_AGE %> or older</span></label>
+            <%= field_error(@user, :user, :confirm_minimum_age) %>
+          <% end %>
+          <% if current_user.terms_accepted_at.blank? %>
+            <label class="check"><%= f.check_box :accept_terms %> <span>I agree to the <%= link_to "Terms of use", terms_path, target: "_blank" %> and <%= link_to "Privacy Policy", privacy_path, target: "_blank" %></span></label>
+            <%= field_error(@user, :user, :accept_terms) %>
+          <% end %>
+          <% if current_user.sensitive_data_consent_at.blank? %>
+            <label class="check"><%= f.check_box :accept_sensitive_data %> <span>I understand that being a TKT member shows a religious affiliation, and I consent to TKT storing that</span></label>
+            <%= field_error(@user, :user, :accept_sensitive_data) %>
+          <% end %>
+        </fieldset>
+      <% end %>
+
+      <button type="submit" class="btn btn--block"><span class="btn__label">Continue</span></button>
+    <% end %>
+  </div>
+</section>

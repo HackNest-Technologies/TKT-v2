@@ -1,0 +1,35 @@
+<% content_for :title, "Change email or password" %>
+<section class="container page-head">
+  <%= link_to "Back to account", account_path, class: "link-arrow link-arrow--back" %>
+  <h1 class="display display--lg mt-5">Email &amp; password</h1>
+</section>
+<section class="container section--tight">
+  <%= render "shared/flash" %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "form form--panel", novalidate: true }) do |f| %>
+    <%= error_summary(resource) %>
+    <div class="field">
+      <%= f.label :email, "Email", class: "field__label" %>
+      <%= f.email_field :email, autocomplete: "email", class: "field__input", aria: field_aria(resource, :user, :email) %>
+      <%= field_error(resource, :user, :email) %>
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <p class="field__hint">Waiting for you to confirm <%= resource.unconfirmed_email %>.</p>
+      <% end %>
+    </div>
+    <div class="field">
+      <%= f.label :password, "New password (leave blank to keep the current one)", class: "field__label" %>
+      <%= f.password_field :password, autocomplete: "new-password", class: "field__input", aria: field_aria(resource, :user, :password) %>
+      <%= field_error(resource, :user, :password) %>
+    </div>
+    <div class="field">
+      <%= f.label :password_confirmation, "Confirm new password", class: "field__label" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "field__input", aria: field_aria(resource, :user, :password_confirmation) %>
+      <%= field_error(resource, :user, :password_confirmation) %>
+    </div>
+    <div class="field">
+      <%= f.label :current_password, "Current password (required to save changes)", class: "field__label" %>
+      <%= f.password_field :current_password, autocomplete: "current-password", required: true, class: "field__input", aria: field_aria(resource, :user, :current_password) %>
+      <%= field_error(resource, :user, :current_password) %>
+    </div>
+    <button type="submit" class="btn"><span class="btn__label">Save changes</span></button>
+  <% end %>
+</section>

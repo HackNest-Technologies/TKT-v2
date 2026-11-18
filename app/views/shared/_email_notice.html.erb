@@ -1,0 +1,3 @@
+<% if Rails.env.production? && ENV["SMTP_ADDRESS"].blank? %>
+  <div class="flash flash--notice" role="note">Preview mode: email delivery is not set up yet, so confirmation and password-reset emails are not sent.</div>
+<% end %>

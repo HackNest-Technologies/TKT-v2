@@ -1,0 +1,75 @@
+# Kamal 2 deployment for The Kingdom Trybe.
+# Server IP and hostnames come from environment variables so no infrastructure
+# details are committed. Secrets come from .kamal/secrets (never committed values).
+service: tkt
+image: tkt
+
+servers:
+  web:
+    hosts:
+      - <%= ENV.fetch("TKT_WEB_HOST") %>
+    options:
+      memory: 2g            # KVM 1 has 4 GB; leave room for PostgreSQL and the OS
+
+proxy:
+  ssl: true                 # Let's Encrypt via kamal-proxy (or Cloudflare origin cert)
+  host: <%= ENV.fetch("TKT_APP_HOST") %>
+  app_port: 80
+  healthcheck:
+    path: /up
+    interval: 3
+    timeout: 3
+  buffering:
+    requests: true
+    responses: true
+    max_request_body: 10_000_000   # 10 MB hard ceiling (staff image uploads)
+    memory: 1_000_000
+  response_timeout: 30
+
+# Local registry: images are pushed over the SSH tunnel; no third-party registry account.
+registry:
+  server: localhost:5555
+
+env:
+  secret:
+    - SECRET_KEY_BASE
+    - DATABASE_URL
+    - CACHE_DATABASE_URL
+    - QUEUE_DATABASE_URL
+    - CABLE_DATABASE_URL
+  clear:
+    SOLID_QUEUE_IN_PUMA: true      # one process on KVM 1; split into a job role on bigger servers
+    WEB_CONCURRENCY: 1
+    RAILS_MAX_THREADS: 5
+    RAILS_LOG_LEVEL: info
+    APP_HOSTS: <%= ENV.fetch("TKT_APP_HOST") %>
+
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+
+volumes:
+  - "tkt_storage:/rails/storage"
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64
+
+accessories:
+  db:
+    image: postgres:16
+    host: <%= ENV.fetch("TKT_WEB_HOST") %>
+    # Bound to the server's loopback only: never reachable from the internet.
+    port: "127.0.0.1:5432:5432"
+    env:
+      clear:
+        POSTGRES_USER: tkt
+        POSTGRES_DB: tkt_production
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+    options:
+      memory: 1g

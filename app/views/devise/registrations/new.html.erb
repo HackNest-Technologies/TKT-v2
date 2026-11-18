@@ -1,0 +1,46 @@
+<% content_for :title, "Join the Trybe" %>
+<div class="auth-head">
+  <h1 class="display display--md">Join the Trybe</h1>
+  <p>Pick a handle. The rest is easy.</p>
+</div>
+<%= render "shared/email_notice" %>
+<%= render "users/shared/google_button" %>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "form", novalidate: true }) do |f| %>
+  <%= error_summary(resource) %>
+  <div class="field">
+    <%= f.label :email, "Email", class: "field__label" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "field__input", aria: field_aria(resource, :user, :email) %>
+    <%= field_error(resource, :user, :email) %>
+  </div>
+  <div class="field" data-controller="password-visibility">
+    <%= f.label :password, "Create password", class: "field__label" %>
+    <p class="field__hint" id="password_hint">At least <%= @minimum_password_length || 12 %> characters. A short phrase works well.</p>
+    <div class="field__with-action">
+      <%= f.password_field :password, autocomplete: "new-password", required: true, minlength: 12, class: "field__input", data: { password_visibility_target: "input" }, aria: field_aria(resource, :user, :password, hint_id: "password_hint") %>
+      <button type="button" class="field__action" aria-pressed="false" aria-label="Show password" data-password-visibility-target="button" data-action="password-visibility#toggle">Show</button>
+    </div>
+    <%= field_error(resource, :user, :password) %>
+  </div>
+  <div class="field">
+    <%= f.label :birth_year, "Year of birth", class: "field__label" %>
+    <p class="field__hint" id="birth_year_hint">TKT accounts are for people aged <%= User::MINIMUM_AGE %> and over.</p>
+    <%= f.number_field :birth_year, inputmode: "numeric", min: 1900, max: Date.current.year, required: true, class: "field__input field__input--short", aria: field_aria(resource, :user, :birth_year, hint_id: "birth_year_hint") %>
+    <%= field_error(resource, :user, :birth_year) %>
+  </div>
+  <fieldset class="checks">
+    <legend class="visually-hidden">Agreements</legend>
+    <label class="check"><%= f.check_box :confirm_minimum_age, required: true, aria: field_aria(resource, :user, :confirm_minimum_age) %>
+      <span>I am <%= User::MINIMUM_AGE %> or older</span></label>
+    <%= field_error(resource, :user, :confirm_minimum_age) %>
+    <label class="check"><%= f.check_box :accept_terms, required: true, aria: field_aria(resource, :user, :accept_terms) %>
+      <span>I agree to the <%= link_to "Terms of use", terms_path, target: "_blank" %> and <%= link_to "Privacy Policy", privacy_path, target: "_blank" %></span></label>
+    <%= field_error(resource, :user, :accept_terms) %>
+    <label class="check"><%= f.check_box :accept_sensitive_data, required: true, aria: field_aria(resource, :user, :accept_sensitive_data) %>
+      <span>I understand that being a TKT member shows a religious affiliation, and I consent to TKT storing that</span></label>
+    <%= field_error(resource, :user, :accept_sensitive_data) %>
+  </fieldset>
+  <button type="submit" class="btn btn--block"><span class="btn__label">Continue</span></button>
+<% end %>
+
+<p class="auth-foot">Already have an account? <%= link_to "Login", new_session_path(resource_name) %></p>

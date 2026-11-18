@@ -1,0 +1,23 @@
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <%= link_to root_path, class: "brand" do %>
+        <span class="brand__mark" aria-hidden="true">T</span>
+        <span class="brand__name">The Kingdom Trybe</span>
+      <% end %>
+      <p class="footer-about">TKT supports churches in reaching the digital generation.</p>
+    </div>
+    <% footer_columns.each do |heading, links| %>
+      <div class="footer-col">
+        <h2><%= heading %></h2>
+        <ul>
+          <% links.each do |label, href, external| %>
+            <li><%= link_to label, href, (external ? { rel: "noopener noreferrer", target: "_blank" } : {}) %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+  <%= render "shared/ribbons" %>
+  <p class="copyright">TheKingdomTrybe <%= Date.current.year %>&copy;. All rights reserved.</p>
+</footer>

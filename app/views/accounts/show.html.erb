@@ -1,0 +1,64 @@
+<% content_for :title, "Your account" %>
+<section class="container page-head">
+  <h1 class="display display--lg">Your account</h1>
+  <p class="muted">Signed in as <strong>@<%= current_user.handle %></strong></p>
+</section>
+
+<div class="container section--tight account-grid">
+  <%= render "shared/flash" %>
+
+  <section class="card" aria-labelledby="details-title">
+    <h2 id="details-title" class="display display--sm">Details</h2>
+    <dl class="details">
+      <dt>Email</dt><dd><%= current_user.email %></dd>
+      <dt>Handle</dt><dd>@<%= current_user.handle %></dd>
+      <dt>Sign-in</dt><dd><%= current_user.google_only? ? "Google" : "Email and password" %></dd>
+    </dl>
+    <% unless current_user.google_only? %>
+      <%= link_to "Change email or password", edit_user_registration_path, class: "link-arrow" %>
+    <% end %>
+  </section>
+
+  <section class="card" aria-labelledby="sessions-title">
+    <h2 id="sessions-title" class="display display--sm">Where you're signed in</h2>
+    <ul class="session-list">
+      <% @sessions.each do |s| %>
+        <li class="session-list__item">
+          <div>
+            <p class="session-list__device"><%= s.device_label %><% if @current_session&.id == s.id %> <span class="badge badge--muted">This device</span><% end %></p>
+            <p class="small muted">Signed in <%= time_ago_in_words(s.created_at) %> ago · last active <%= time_ago_in_words(s.last_seen_at) %> ago</p>
+          </div>
+          <% unless @current_session&.id == s.id %>
+            <%= button_to "Sign out", device_session_path(s), method: :delete, class: "btn-text", form: { "aria-label": "Sign out #{s.device_label}" } %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <% if @sessions.size > 1 %>
+      <%= button_to "Sign out everywhere else", others_device_sessions_path, method: :delete, class: "btn-text btn-text--strong" %>
+    <% end %>
+  </section>
+
+  <section class="card" aria-labelledby="data-title">
+    <h2 id="data-title" class="display display--sm">Your data</h2>
+    <p class="small muted">Download a copy of everything TKT holds about your account.</p>
+    <%= link_to "Download my data (JSON)", export_account_path, class: "link-arrow", data: { turbo: false } %>
+  </section>
+
+  <section class="card card--danger" aria-labelledby="delete-title">
+    <h2 id="delete-title" class="display display--sm">Delete account</h2>
+    <p class="small muted">Your account is locked straight away and permanently deleted after 30 days.</p>
+    <%= form_with url: account_path, method: :delete, class: "form" do |f| %>
+      <div class="field">
+        <% if current_user.google_only? %>
+          <%= f.label :confirm_handle, "Type your handle (@#{current_user.handle}) to confirm", class: "field__label" %>
+          <%= f.text_field :confirm_handle, autocomplete: "off", required: true, class: "field__input" %>
+        <% else %>
+          <%= f.label :current_password, "Enter your password to confirm", class: "field__label" %>
+          <%= f.password_field :current_password, autocomplete: "current-password", required: true, class: "field__input" %>
+        <% end %>
+      </div>
+      <button type="submit" class="btn-danger">Delete my account</button>
+    <% end %>
+  </section>
+</div>

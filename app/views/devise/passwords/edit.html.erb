@@ -1,0 +1,24 @@
+<% content_for :title, "Choose a new password" %>
+<div class="auth-head">
+  <h1 class="display display--md">New password</h1>
+  <p>Changing your password signs you out on every other device.</p>
+</div>
+<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "form", novalidate: true }) do |f| %>
+  <%= error_summary(resource) %>
+  <%= f.hidden_field :reset_password_token %>
+  <div class="field" data-controller="password-visibility">
+    <%= f.label :password, "New password", class: "field__label" %>
+    <p class="field__hint" id="new_password_hint">At least <%= @minimum_password_length || 12 %> characters.</p>
+    <div class="field__with-action">
+      <%= f.password_field :password, autofocus: true, autocomplete: "new-password", required: true, class: "field__input", data: { password_visibility_target: "input" }, aria: field_aria(resource, :user, :password, hint_id: "new_password_hint") %>
+      <button type="button" class="field__action" aria-pressed="false" aria-label="Show password" data-password-visibility-target="button" data-action="password-visibility#toggle">Show</button>
+    </div>
+    <%= field_error(resource, :user, :password) %>
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation, "Confirm new password", class: "field__label" %>
+    <%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, class: "field__input", aria: field_aria(resource, :user, :password_confirmation) %>
+    <%= field_error(resource, :user, :password_confirmation) %>
+  </div>
+  <button type="submit" class="btn btn--block"><span class="btn__label">Save password</span></button>
+<% end %>

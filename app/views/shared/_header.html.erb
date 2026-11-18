@@ -1,0 +1,27 @@
+<header class="site-header <%= "site-header--overlay" if local_assigns[:overlay] %>" data-controller="nav">
+  <div class="container site-header__inner">
+    <%= link_to root_path, class: "brand" do %>
+      <span class="brand__mark" aria-hidden="true">T</span>
+      <span class="brand__name">The Kingdom Trybe</span>
+    <% end %>
+
+    <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false"
+            data-nav-target="toggle" data-action="nav#toggle">Menu</button>
+
+    <nav class="nav" id="site-nav" aria-label="Main" data-nav-target="menu" data-open="false">
+      <ul class="nav__list">
+        <% primary_nav_items.each do |label, path| %>
+          <li><%= link_to label, path, class: "nav__link", aria: { current: (current_page?(path) ? "page" : nil) } %></li>
+        <% end %>
+      </ul>
+      <% if user_signed_in? %>
+        <div class="nav__account">
+          <%= link_to "@#{current_user.handle || "account"}", account_path, class: "nav__link", aria: { current: (current_page?(account_path) ? "page" : nil) } %>
+          <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "nav__link nav__signout" %>
+        </div>
+      <% else %>
+        <%= link_to new_user_session_path, class: "btn btn--sm" do %><span class="btn__label">Sign in</span><% end %>
+      <% end %>
+    </nav>
+  </div>
+</header>

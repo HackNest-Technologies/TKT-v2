@@ -1,0 +1,15 @@
+<% content_for :title, "Forgot password" %>
+<div class="auth-head">
+  <h1 class="display display--md">Forgot password</h1>
+  <p>Enter your email and we'll send a reset link if an account exists.</p>
+</div>
+<%= render "shared/email_notice" %>
+<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "form", novalidate: true }) do |f| %>
+  <%= error_summary(resource) %>
+  <div class="field">
+    <%= f.label :email, "Email", class: "field__label" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "field__input" %>
+  </div>
+  <button type="submit" class="btn btn--block"><span class="btn__label">Send reset link</span></button>
+<% end %>
+<p class="auth-foot"><%= link_to "Back to sign in", new_session_path(resource_name) %></p>

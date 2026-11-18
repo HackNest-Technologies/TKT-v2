@@ -1,0 +1,160 @@
+<% content_for :header_overlay, true %>
+
+<%# 1. Hero %>
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__media" aria-hidden="true"><div class="media-placeholder media-placeholder--hero"></div></div>
+  <div class="container">
+    <%= link_to watch_path, class: "pill" do %><span class="pill__dot" aria-hidden="true"></span>See what's live<% end %>
+    <h1 id="hero-title" class="display display--xl hero__title">Stream, Belong, Heal.</h1>
+    <p class="lead hero__lead">A faith-based digital church that blends livestream worship, trybe-style community, and private support — built for gamers, streamers, and seekers.</p>
+    <%= link_to new_user_registration_path, class: "btn" do %><span class="btn__label">Join the Trybe</span><% end %>
+  </div>
+</section>
+
+<%= render "shared/ribbons" %>
+
+<%# 2. Three ways to grow %>
+<section class="section container" aria-labelledby="grow-title">
+  <div class="pillars__head">
+    <h2 id="grow-title" class="display display--md framed-title">One platform. Three ways to grow.</h2>
+    <p class="muted">TKT reimagines church for people who live on screens and in communities — not just on Sundays.</p>
+  </div>
+
+  <div class="pillars">
+    <article class="pillar pillar--green">
+      <div class="pillar__tab">Congregation</div>
+      <div class="pillar__body">
+        <svg class="pillar__icon" viewBox="0 0 72 72" fill="none" stroke="#43e2a6" stroke-width="2.5" aria-hidden="true"><rect x="6" y="12" width="60" height="40" rx="4"/><path d="M30 24l14 8-14 8z" fill="#43e2a6"/><path d="M24 62h24M36 52v10"/></svg>
+        <p class="pillar__text">Digital worship, faith streams, and joy streams — live or pre-recorded — without leaving the platform. React with emojis, join polls, and clip “moments of light.”</p>
+        <%= link_to "Watch now", watch_path, class: "link-arrow" %>
+      </div>
+    </article>
+
+    <article class="pillar pillar--violet">
+      <div class="pillar__tab">Community</div>
+      <div class="pillar__body">
+        <svg class="pillar__icon" viewBox="0 0 72 72" fill="none" stroke="#785ffc" stroke-width="2.5" aria-hidden="true"><path d="M8 14h36v22H22l-8 8v-8H8z"/><path d="M28 42v8h22l8 8v-8h6V28H50"/><path d="M16 24h20M16 30h12"/></svg>
+        <p class="pillar__text">Join Trybes for devotionals, niche interest groups, prayer circles, and Telegram-synced events. Earn XP for showing up, sharing, and serving.</p>
+        <%= link_to "Explore Trybes", community_path, class: "link-arrow" %>
+      </div>
+    </article>
+
+    <article class="pillar pillar--amber">
+      <div class="pillar__tab">Counselling</div>
+      <div class="pillar__body">
+        <svg class="pillar__icon" viewBox="0 0 72 72" fill="none" stroke="#f9b640" stroke-width="2.5" aria-hidden="true"><circle cx="26" cy="24" r="9"/><path d="M10 56c0-10 7-17 16-17s16 7 16 17z"/><circle cx="48" cy="24" r="9"/><path d="M42 39.5c1.9-.3 3.9-.5 6-.5 9 0 16 7 16 17H46"/></svg>
+        <p class="pillar__text">Talk to someone from our pastoral team privately when life gets heavy. Real care, faith-first.</p>
+        <%= link_to "Get support", support_path, class: "link-arrow" %>
+      </div>
+    </article>
+  </div>
+</section>
+
+<%# 3. Live on TKT (sample data until Stage 6) %>
+<section class="section container center" aria-labelledby="live-title">
+  <h2 id="live-title" class="display display--md framed-title"><span class="pill__dot" aria-hidden="true"></span> Live on TKT</h2>
+  <% stream = @landing.featured_stream %>
+  <article class="stream-card mt-7 text-left">
+    <div class="stream-card__head">
+      <h3 class="stream-card__title"><%= stream.title %></h3>
+      <div class="badges">
+        <% if stream.live %><span class="badge badge--live">● LIVE</span><% end %>
+        <span class="badge badge--muted"><%= stream.viewers_label %></span>
+      </div>
+    </div>
+    <div class="video-frame"><div class="media-placeholder media-placeholder--fill"></div></div>
+  </article>
+  <p class="mt-5 text-left">
+    <%= link_to watch_path, class: "btn" do %><span class="btn__label">Watch stream</span><% end %>
+  </p>
+</section>
+
+<%# 4. Belong to a Trybe (sample data until Stage 7) %>
+<section class="section container" aria-labelledby="trybe-title">
+  <div class="split">
+    <div>
+      <h2 id="trybe-title" class="display display--md framed-title">Belong to a Trybe.</h2>
+      <p class="muted mt-5">TKT runs on topic-based rooms — global announcements, prayer channels, mentorship groups, and “AFK with God” sessions. Stay synced across web and Telegram.</p>
+      <ul class="check-list">
+        <li>Daily devotion reminders and scripture quizzes</li>
+        <li>Polls, events, and synced calendar</li>
+        <li>Moderation to keep it safe</li>
+      </ul>
+      <%= link_to community_path, class: "btn" do %><span class="btn__label">Explore channels</span><% end %>
+    </div>
+    <div class="trybe-list">
+      <% @landing.trybes.each do |trybe| %>
+        <div class="trybe-row">
+          <span class="trybe-row__name"><%= trybe.name %></span>
+          <span class="trybe-row__meta"><%= trybe.members_label %> · <%= trybe.description %></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 5. Testimonies (sample — publish only with consent) %>
+<section class="section container center" aria-labelledby="testimonies-title">
+  <h2 id="testimonies-title" class="display display--md framed-title">Testimonies</h2>
+  <p class="muted intro intro--wide">We are blessed to witness the transformative power of faith in our lives. Our testimonies are a testament to God's grace, love, and miraculous works. We invite you to share your own testimony and join us in celebrating the incredible ways God is moving in our lives.</p>
+  <div class="grid grid--3 text-left">
+    <% @landing.testimonies.each do |quote| %>
+      <figure class="quote-card">
+        <blockquote><p>“<%= quote.text %>”</p></blockquote>
+        <figcaption>— <%= quote.author %></figcaption>
+      </figure>
+    <% end %>
+  </div>
+  <p class="mt-6">
+    <%= link_to share_testimony_path, class: "btn" do %><span class="btn__label">Share testimony</span><% end %>
+  </p>
+</section>
+
+<%# 6. Support (counselling is out of v1: contact route only) %>
+<section class="section container center" aria-labelledby="support-title">
+  <h2 id="support-title" class="display display--md framed-title">Talk to someone, privately.</h2>
+  <p class="muted intro intro--snug">Reach out to our pastoral team when you need someone to listen. Your story stays yours.</p>
+  <%= link_to support_path, class: "btn" do %><span class="btn__label">Get support</span><% end %>
+  <div class="stream-card support-media">
+    <div class="media-placeholder media-placeholder--fill" aria-hidden="true"></div>
+  </div>
+</section>
+
+<%# 7. Fresh from the Trybe (sample until Stage 7) %>
+<section class="section container" aria-labelledby="blog-title">
+  <div class="center">
+    <h2 id="blog-title" class="display display--md framed-title">Fresh from the Trybe</h2>
+    <p class="muted intro">Articles, hot takes, and devotionals that connect faith with digital culture — for people who live online.</p>
+  </div>
+  <% post = @landing.featured_post %>
+  <div class="blog-grid">
+    <article class="post-feature">
+      <div class="post-feature__media" aria-hidden="true"><div class="media-placeholder media-placeholder--fill"></div></div>
+      <div class="post-feature__body">
+        <span class="tag"><%= post.tag %></span>
+        <h3><%= post.title %></h3>
+        <p class="muted small"><%= post.excerpt %></p>
+        <div class="post-meta">
+          <%= link_to "Read", blog_path, class: "link-arrow", aria: { label: "Read: #{post.title}" } %>
+          <span><%= post.meta %></span>
+        </div>
+      </div>
+    </article>
+    <div class="post-side" aria-hidden="true">
+      <div class="media-placeholder"></div>
+      <div class="media-placeholder"></div>
+    </div>
+  </div>
+  <p class="mt-6">
+    <%= link_to blog_path, class: "btn" do %><span class="btn__label">Go to blog</span><% end %>
+  </p>
+</section>
+
+<%# 8. Support the mission %>
+<section class="section container center mission" aria-labelledby="mission-title">
+  <h2 id="mission-title" class="display display--xl">Support the mission.</h2>
+  <div class="mission__media" aria-hidden="true"><div class="media-placeholder"></div></div>
+  <p class="muted intro intro--snug">Give to keep the streams, Trybes, and support rooms running. Or grab limited “FaithDrop” drops from the store.</p>
+  <%= link_to give_path, class: "btn" do %><span class="btn__label">Give</span><% end %>
+  <p class="mt-4"><%= link_to "Shop FaithDrop", store_path, class: "link-arrow" %></p>
+</section>

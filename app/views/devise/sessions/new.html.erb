@@ -1,0 +1,34 @@
+<% content_for :title, "Sign in" %>
+<div class="auth-head">
+  <h1 class="display display--md">Welcome back</h1>
+  <p>Sign in with your password.</p>
+</div>
+<%= render "shared/email_notice" %>
+<%= render "users/shared/google_button" %>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "form", novalidate: true }) do |f| %>
+  <div class="field">
+    <%= f.label :email, "Email", class: "field__label" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "field__input" %>
+  </div>
+  <div class="field" data-controller="password-visibility">
+    <%= f.label :password, "Password", class: "field__label" %>
+    <div class="field__with-action">
+      <%= f.password_field :password, autocomplete: "current-password", required: true, class: "field__input", data: { password_visibility_target: "input" } %>
+      <button type="button" class="field__action" aria-pressed="false" aria-label="Show password" data-password-visibility-target="button" data-action="password-visibility#toggle">Show</button>
+    </div>
+  </div>
+  <div class="form__row">
+    <% if devise_mapping.rememberable? %>
+      <label class="check"><%= f.check_box :remember_me %> <span>Remember me</span></label>
+    <% end %>
+    <%= link_to "Forgot password", new_password_path(resource_name), class: "form__link" %>
+  </div>
+  <button type="submit" class="btn btn--block"><span class="btn__label">Continue</span></button>
+<% end %>
+
+<p class="auth-foot">New to TKT? <%= link_to "Create account", new_registration_path(resource_name) %></p>
+<p class="auth-foot auth-foot--small">
+  <%= link_to "Didn't get a confirmation email?", new_confirmation_path(resource_name) %> ·
+  <%= link_to "Account locked?", new_unlock_path(resource_name) %>
+</p>

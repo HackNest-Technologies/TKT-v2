@@ -1,0 +1,49 @@
+# Render Blueprint: preview deployment of The Kingdom Trybe.
+# Free plans: the web service sleeps after 15 minutes idle (about 1 minute to wake),
+# and the free database expires 30 days after creation (upgrade it to keep data).
+# Production runs on the Hostinger VPS via Kamal (config/deploy.yml), not here.
+services:
+  - type: web
+    name: tkt-preview
+    runtime: ruby
+    plan: free
+    region: frankfurt
+    buildCommand: bundle install && SECRET_KEY_BASE_DUMMY=1 bin/rails assets:precompile && bin/rails assets:clean
+    startCommand: bin/rails db:prepare && bundle exec puma -C config/puma.rb
+    healthCheckPath: /up
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tkt-preview-db
+          property: connectionString
+      - key: SINGLE_DATABASE
+        value: "true"
+      - key: RAILS_MAX_THREADS
+        value: "3"
+      - key: ALLOW_UNCONFIRMED_ACCESS
+        value: "true"          # until SMTP is configured, new members can use the site for 3 days unconfirmed
+      - key: PREVIEW_PASSWORD
+        sync: false            # you choose it in the Render dashboard; username is "tkt"
+      - key: MAIL_FROM
+        sync: false
+      - key: SMTP_ADDRESS
+        sync: false
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+
+databases:
+  - name: tkt-preview-db
+    plan: free
+    region: frankfurt
+    postgresMajorVersion: "16"
+    ipAllowList: []            # reachable only from services in your Render account

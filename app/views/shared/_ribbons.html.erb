@@ -1,0 +1,12 @@
+<%# Decorative scrolling ribbons; hidden from assistive tech (repeated text). %>
+<div class="ribbons" aria-hidden="true">
+  <% %w[a b].each do |row| %>
+    <div class="ribbon ribbon--<%= row %>">
+      <div class="ribbon__track">
+        <% 2.times do %>
+          <% 6.times do %><span class="ribbon__item">Church for the digital natives</span><% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
