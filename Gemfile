@@ -73,4 +73,4 @@ gem "pundit", "~> 2.4"
 # Abuse controls
 gem "rack-attack", "~> 6.7"
 # One JSON line per request, no params
-gem "lograge", "~> 0.14"
+gem "lograge", "~> 0.16"
