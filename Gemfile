@@ -67,7 +67,7 @@ end
 # Authentication: established library with lockout, confirmation, timeout
 gem "devise", "~> 5.0", ">= 5.0.4"
 gem "omniauth-google-oauth2", "~> 1.2"
-gem "omniauth-rails_csrf_protection", "~> 1.0"
+gem "omniauth-rails_csrf_protection", "~> 2.0"
 # Authorization: explicit policy per resource
 gem "pundit", "~> 2.4"
 # Abuse controls
